@@ -8,7 +8,7 @@
   "keywords": "Angular, Directive, jsTree",
   "main": "jsTree.directive.js",
   "license": "MIT",
-  "homepage": "https://github.com/arvindr21/jsTree-Angular-Directive/",
+  "homepage": "https://github.com/arvindr21/jsTree-directive",
   "ignore": [
     "**/.*"
   ]
