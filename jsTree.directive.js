@@ -99,12 +99,15 @@ ngJSTree.directive('jsTree', function($http) {
             treeDir.init(s, e, a, config);
           });
         } else if (a.treeData == 'scope') {
-          config = {
-            'core': {
-              'data': s[a.treeModel]
-            }
-          };
-          treeDir.init(s, e, a, config);
+          s.$watch(a.treeModel, function() {
+            config = {
+              'core': {
+                'data': s[a.treeModel]
+              }
+            };
+            $(e).jstree('destroy');
+            treeDir.init(s, e, a, config);
+          }, true);
         } else if (a.treeAjax) {
           config = {
             'core': {
