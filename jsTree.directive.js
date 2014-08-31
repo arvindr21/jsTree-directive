@@ -1,6 +1,6 @@
 /*
  * jstree.directive [http://www.jstree.com]
- * https://github.com/arvindr21/jsTree-directive
+ * http://arvindr21.github.io/jsTree-Angular-Directive
  *
  * Copyright (c) 2014 Arvind Ravulavaru
  * Licensed under the MIT license.
@@ -98,6 +98,13 @@ ngJSTree.directive('jsTree', function($http) {
             };
             treeDir.init(s, e, a, config);
           });
+        } else if (a.treeData == 'scope') {
+          config = {
+            'core': {
+              'data': s[a.treeModel]
+            }
+          };
+          treeDir.init(s, e, a, config);
         } else if (a.treeAjax) {
           config = {
             'core': {

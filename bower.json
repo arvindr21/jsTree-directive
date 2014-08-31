@@ -1,15 +1,26 @@
 {
   "name": "jsTree-directive",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "authors": [
     "Arvind Ravulavaru <arvind.ravulavaru@gmail.com>"
   ],
   "description": "An Angular Directive for jsTree",
-  "keywords": "Angular, Directive, jsTree",
+  "keywords": [
+    "Angular",
+    "Directive",
+    "jsTree"
+  ],
   "main": "jsTree.directive.js",
   "license": "MIT",
   "homepage": "https://github.com/arvindr21/jsTree-directive",
   "ignore": [
-    "**/.*"
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "moduleType": [
+    "node"
   ]
 }
