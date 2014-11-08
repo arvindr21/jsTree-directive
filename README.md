@@ -3,7 +3,7 @@ jsTree-directive
 
 An Angular Directive for jsTree
 
-* [Documentation](http://jstree-directive.herokuapp.com//)
+* [Documentation](http://jstree-directive.herokuapp.com/#/basic)
 
 Install using `bower`
 
