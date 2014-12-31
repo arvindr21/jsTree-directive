@@ -50,8 +50,15 @@ ngJSTree.directive('jsTree', function($http) {
         if (config.plugins.indexOf('contextmenu') >= 0) {
           if (a.treeContextmenu) {
             config.contextmenu = config.contextmenu || {};
-            config.contextmenu.items = function() {
-              return s[a.treeContextmenu];
+            
+            if (a.treeContextmenuaction != undefined) {
+              config.contextmenu.items = function(e){   
+                return s.$eval(a.treeContextmenuaction)(e);
+              }
+            } else {
+              config.contextmenu.items = function() {
+                 return s[a.treeContextmenu];
+              }
             }
           }
         }
