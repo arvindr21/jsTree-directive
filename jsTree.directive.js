@@ -52,15 +52,14 @@ ngJSTree.directive('jsTree', function($http) {
             config.contextmenu = config.contextmenu || {};
             
             if (a.treeContextmenuaction != undefined) {
-            	config.contextmenu.items = function(e){   
-            		return s.$eval(a.treeContextmenuaction)(e);
-            	}
+              config.contextmenu.items = function(e){   
+                return s.$eval(a.treeContextmenuaction)(e);
+              }
             } else {
-	            config.contextmenu.items = function() {
-	              return s[a.treeContextmenu];
-	            }
+              config.contextmenu.items = function() {
+                 return s[a.treeContextmenu];
+              }
             }
-
           }
         }
 
