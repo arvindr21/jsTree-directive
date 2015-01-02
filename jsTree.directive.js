@@ -52,8 +52,15 @@ ngJSTree.directive('jsTree', function($http) {
         if (config.plugins.indexOf('contextmenu') >= 0) {
           if (a.treeContextmenu) {
             config.contextmenu = config.contextmenu || {};
-            config.contextmenu.items = function() {
-              return s[a.treeContextmenu];
+
+            if (a.treeContextmenuaction != undefined) {
+              config.contextmenu.items = function(e) {
+                return s.$eval(a.treeContextmenuaction)(e);
+              }
+            } else {
+              config.contextmenu.items = function() {
+                return s[a.treeContextmenu];
+              }
             }
           }
         }
@@ -101,14 +108,16 @@ ngJSTree.directive('jsTree', function($http) {
             treeDir.init(s, e, a, config);
           });
         } else if (a.treeData == 'scope') {
-          s.$watch(a.treeModel, function() {
-            config = {
-              'core': {
-                'data': s[a.treeModel]
-              }
-            };
-            $(e).jstree('destroy');
-            treeDir.init(s, e, a, config);
+          s.$watch(a.treeModel, function(o, n) {
+            if (n) {
+              config = {
+                'core': {
+                  'data': s[a.treeModel]
+                }
+              };
+              $(e).jstree('destroy');
+              treeDir.init(s, e, a, config);
+            }
           }, true);
         } else if (a.treeAjax) {
           config = {
