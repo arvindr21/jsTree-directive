@@ -7,7 +7,7 @@
  */
 
 var ngJSTree = angular.module('jsTree.directive', []);
-ngJSTree.directive('jsTree', function($http) {
+ngJSTree.directive('jsTree', ['$http',function($http) {
 
   var treeDir = {
     restrict: 'EA',
@@ -146,4 +146,4 @@ ngJSTree.directive('jsTree', function($http) {
 
   return treeDir;
 
-});
+}]);
