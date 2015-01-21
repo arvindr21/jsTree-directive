@@ -119,6 +119,10 @@ ngJSTree.directive('jsTree', ['$http', function($http) {
               treeDir.init(s, e, a, config);
             }
           }, true);
+          // Trigger it initally
+          // Fix issue #13
+          treeDir.init(s, e, a, config);
+
         } else if (a.treeAjax) {
           config = {
             'core': {
