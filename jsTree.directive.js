@@ -108,7 +108,7 @@ ngJSTree.directive('jsTree', ['$http', function($http) {
             treeDir.init(s, e, a, config);
           });
         } else if (a.treeData == 'scope') {
-          s.$watch(a.treeModel, function(o, n) {
+          s.$watch(a.treeModel, function(n, o) {
             if (n) {
               config = {
                 'core': {
