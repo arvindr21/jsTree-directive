@@ -21,7 +21,7 @@ ngJSTree.directive('jsTree', ['$http', function($http) {
       if (a.treePlugins) {
         config.plugins = a.treePlugins.split(',');
         config.core = config.core || {};
-        config.core.check_callback = true;
+        config.core.check_callback = config.core.check_callback || true;
 
         if (config.plugins.indexOf('state') >= 0) {
           config.state = config.state || {};
@@ -71,6 +71,13 @@ ngJSTree.directive('jsTree', ['$http', function($http) {
             console.log(config);
           }
         }
+
+        if (config.plugins.indexOf('dnd') >= 0) {
+          if (a.treeDnd) {
+            config.dnd = s[a.treeDnd];
+            console.log(config);
+          }
+        }
       }
       return config;
     },
@@ -79,8 +86,12 @@ ngJSTree.directive('jsTree', ['$http', function($http) {
         var evMap = a.treeEvents.split(';');
         for (var i = 0; i < evMap.length; i++) {
           if (evMap[i].length > 0) {
-            var evt = evMap[i].split(':')[0] + '.jstree',
-              cb = evMap[i].split(':')[1];
+	    // plugins could have events with suffixes other than '.jstree'
+            var evt = evMap[i].split(':')[0];
+            if (evt.indexOf('.') < 0) {
+              evt = evt + '.jstree';
+            }
+            var cb = evMap[i].split(':')[1];
             treeDir.tree.on(evt, s[cb]);
           }
         }
@@ -89,6 +100,13 @@ ngJSTree.directive('jsTree', ['$http', function($http) {
     link: function(s, e, a) { // scope, element, attribute \O/
       $(function() {
         var config = {};
+	
+	// users can define 'core'
+        config.core = {};
+        if (a.treeCore) {
+          config.core = $.extend(config.core, s[a.treeCore]);
+        }
+
         // clean Case
         a.treeData = a.treeData ? a.treeData.toLowerCase() : '';
         a.treeSrc = a.treeSrc ? a.treeSrc.toLowerCase() : '';
@@ -100,45 +118,28 @@ ngJSTree.directive('jsTree', ['$http', function($http) {
           });
         } else if (a.treeData == 'json') {
           treeDir.fetchResource(a.treeSrc, function(data) {
-            config = {
-              'core': {
-                'data': data
-              }
-            };
+            config.core.data = data;
             treeDir.init(s, e, a, config);
           });
         } else if (a.treeData == 'scope') {
           s.$watch(a.treeModel, function(n, o) {
             if (n) {
-              config = {
-                'core': {
-                  'data': s[a.treeModel]
-                }
-              };
+              config.core.data = s[a.treeModel];
               $(e).jstree('destroy');
               treeDir.init(s, e, a, config);
             }
           }, true);
           // Trigger it initally
           // Fix issue #13
-          config = {
-            'core': {
-              'data': s[a.treeModel]
-            }
-          };
+          config.core.data = s[a.treeModel];
           treeDir.init(s, e, a, config);
-
         } else if (a.treeAjax) {
-          config = {
-            'core': {
-              'data': {
-                'url': a.treeAjax,
-                'data': function(node) {
-                  return {
-                    'id': node.id != '#' ? node.id : 1
-                  };
-                }
-              }
+          config.core.data = {
+            'url': a.treeAjax,
+            'data': function(node) {
+              return {
+                'id': node.id != '#' ? node.id : 1
+              };
             }
           };
           treeDir.init(s, e, a, config);
