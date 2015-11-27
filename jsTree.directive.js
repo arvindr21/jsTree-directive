@@ -45,7 +45,9 @@ ngJSTree.directive('jsTree', ['$http', function($http) {
         }
 
         if (config.plugins.indexOf('checkbox') >= 0) {
-          config.checkbox = config.checkbox || {};
+          if (a.treeCheckbox) {
+            config.checkbox = s[a.treeCheckbox];
+          }
           config.checkbox.keep_selected_style = false;
         }
 
