@@ -58,14 +58,12 @@ ngJSTree.directive('jsTree', ['$http', function($http) {
         if (config.plugins.indexOf('types') >= 0) {
           if (a.treeTypes) {
             config.types = s[a.treeTypes];
-            console.log(config);
           }
         }
 
         if (config.plugins.indexOf('dnd') >= 0) {
           if (a.treeDnd) {
             config.dnd = s[a.treeDnd];
-            console.log(config);
           }
         }
       }
