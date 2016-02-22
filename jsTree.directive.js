@@ -51,7 +51,7 @@ ngJSTree.directive('jsTree', ['$http', function($http) {
 
         if (config.plugins.indexOf('contextmenu') >= 0) {
           if (a.treeContextmenu) {
-            config.contextmenu = s[a.treeContextmenu];
+            config.contextmenu = {items: s[a.treeContextmenu]};
           }
         }
 
@@ -73,7 +73,7 @@ ngJSTree.directive('jsTree', ['$http', function($http) {
     },
     manageEvents: function(s, e, a) {
       if (a.treeEvents) {
-        var evMap = a.treeEvents.split(';');
+        var evMap = a.treeEvents.split(',');
         for (var i = 0; i < evMap.length; i++) {
           if (evMap[i].length > 0) {
 	    // plugins could have events with suffixes other than '.jstree'
@@ -122,6 +122,11 @@ ngJSTree.directive('jsTree', ['$http', function($http) {
           // Trigger it initally
           // Fix issue #13
           config.core.data = s[a.treeModel];
+          treeDir.init(s, e, a, config);
+        } else if (a.callback) {
+          config.core.data = function (node, cb) {
+            s[a.callback](node, cb);
+          };
           treeDir.init(s, e, a, config);
         } else if (a.treeAjax) {
           config.core.data = {
