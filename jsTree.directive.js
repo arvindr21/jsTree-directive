@@ -9,6 +9,8 @@
 var ngJSTree = angular.module('jsTree.directive', []);
 ngJSTree.directive('jsTree', ['$http', function($http) {
 
+  var indexOf = function(obj,i) { return obj[i] };
+
   var treeDir = {
     restrict: 'EA',
     fetchResource: function(url, cb) {
@@ -82,7 +84,8 @@ ngJSTree.directive('jsTree', ['$http', function($http) {
               evt = evt + '.jstree';
             }
             var cb = evMap[i].split(':')[1];
-            treeDir.tree.on(evt, s[cb]);
+            var eventFunction = cb.split('.').reduce(indexOf, s);
+            treeDir.tree.on(evt, eventFunction);
           }
         }
       }
@@ -90,7 +93,7 @@ ngJSTree.directive('jsTree', ['$http', function($http) {
     link: function(s, e, a) { // scope, element, attribute \O/
       $(function() {
         var config = {};
-	
+
 	// users can define 'core'
         config.core = {};
         if (a.treeCore) {
