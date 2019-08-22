@@ -7,10 +7,11 @@
  */
 
 var ngJSTree = angular.module('jsTree.directive', []);
-ngJSTree.directive('jsTree', ['$http', function($http) {
+ngJSTree.directive('jsTree', ['$http','$parse', function($http,$parse) {
 
   var treeDir = {
     restrict: 'EA',
+    scope: true,
     fetchResource: function(url, cb) {
       return $http.get(url).then(function(data) {
         if (cb) cb(data.data);
@@ -51,7 +52,17 @@ ngJSTree.directive('jsTree', ['$http', function($http) {
 
         if (config.plugins.indexOf('contextmenu') >= 0) {
           if (a.treeContextmenu) {
-            config.contextmenu = s[a.treeContextmenu];
+            config.contextmenu = config.contextmenu || {};
+
+            if (a.treeContextmenuaction != undefined) {
+              config.contextmenu.items = function(e) {
+                return s.$eval(a.treeContextmenuaction)(e);
+              }
+            } else {
+              config.contextmenu.items = function() {
+                return s[a.treeContextmenu];
+              }
+            }
           }
         }
 
@@ -97,6 +108,17 @@ ngJSTree.directive('jsTree', ['$http', function($http) {
           config.core = $.extend(config.core, s[a.treeCore]);
         }
 
+        //Add model by ng-model or tree-model
+        var model = null;
+        if(a.ngModel == undefined){
+          model =  $parse(a.treeModel);
+        }else{
+          model =  $parse(a.ngModel);
+        }
+
+        //get value model
+        var valueModel = model(s);
+
         // clean Case
         a.treeData = a.treeData ? a.treeData.toLowerCase() : '';
         a.treeSrc = a.treeSrc ? a.treeSrc.toLowerCase() : '';
@@ -112,9 +134,17 @@ ngJSTree.directive('jsTree', ['$http', function($http) {
             treeDir.init(s, e, a, config);
           });
         } else if (a.treeData == 'scope') {
-          s.$watch(a.treeModel, function(n, o) {
+
+          //if valueModel not is undefined
+          if(valueModel){
+            config.core.data = valueModel;
+            treeDir.init(s, e, a, config);
+          }
+
+          //if value change execute rebuild tree
+          s.$watch(valueModel, function(n, o) {
             if (n) {
-              config.core.data = s[a.treeModel];
+              config.core.data = valueModel;
               $(e).jstree('destroy');
               treeDir.init(s, e, a, config);
             }
